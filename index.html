@@ -101,7 +101,7 @@
             const baseInstallment = totalChitValue / totalParticipants;
             const nextInstallment = baseInstallment - profitPerPerson;
             const remainingMonths = totalParticipants - currentMonth;
-            const amountToBePaid = totalChitValue - bidAmount - commission;
+            const amountToBePaid = totalChitValue - bidAmount;
 
             document.getElementById('result').innerHTML = `
                 <p><strong>Amount to be Paid:</strong> ₹${amountToBePaid.toFixed(2)}</p>
