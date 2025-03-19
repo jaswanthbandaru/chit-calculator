@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chit Fund Calculator</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input, button {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin: 10px auto;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            display: block;
+            transition: all 0.3s ease-in-out;
+        }
+        input {
+            background: #f8f9fa;
+        }
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0px 0px 5px rgba(102, 126, 234, 0.5);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 3px 10px rgba(0, 123, 255, 0.3);
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            background: #eef2f3;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: inset 0px 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .copy-button {
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 0px 3px 8px rgba(40, 167, 69, 0.3);
+        }
+        .copy-button:hover {
+            background: #218838;
+        }
+        .copy-success {
+            color: green;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+            input, button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Chit Fund Calculator</h2>
+        <label>Total Chit Value:</label>
+        <input type="number" id="totalChitValue" value="100000">
+        
+        <label>Bid Amount:</label>
+        <input type="number" id="bidAmount" value="40000">
+        
+        <label>Total Participants:</label>
+        <input type="number" id="totalParticipants" value="25">
+        
+        <label>Current Month:</label>
+        <input type="number" id="currentMonth" value="1" min="1">
+        
+        <label>Auction Date:</label>
+        <input type="date" id="auctionDate">
+        
+        <button onclick="calculateChit()">Calculate</button>
+        
+        <div class="result" id="result"></div>
+        
+        <div id="copySection" style="display:none;">
+            <button class="copy-button" onclick="copyDetails()">Copy Key Details</button>
+            <p id="copySuccess" class="copy-success">Copied to clipboard!</p>
+        </div>
+    </div>
+    <script>
+        // Set default auction date to the 15th of next month
+        function setDefaultAuctionDate() {
+            const today = new Date();
+            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+            const formattedDate = nextMonth.toISOString().split('T')[0];
+            document.getElementById('auctionDate').value = formattedDate;
+        }
+        
+        // Call this function when the page loads
+        setDefaultAuctionDate();
+        
+        function calculateChit() {
+            const totalChitValue = parseFloat(document.getElementById('totalChitValue').value);
+            const bidAmount = parseFloat(document.getElementById('bidAmount').value);
+            const totalParticipants = parseInt(document.getElementById('totalParticipants').value);
+            const currentMonth = parseInt(document.getElementById('currentMonth').value);
+            const auctionDate = document.getElementById('auctionDate').value;
+            
+            // Validate inputs
+            if (isNaN(totalChitValue) || isNaN(bidAmount) || isNaN(totalParticipants) || isNaN(currentMonth)) {
+                alert("Please enter valid numbers for all fields.");
+                return;
+            }
+            
+            if (currentMonth > totalParticipants) {
+                alert("Current month cannot be greater than total participants.");
+                return;
+            }
+            
+            const commissionRate = 0.04; // 4% commission
+            const commission = totalChitValue * commissionRate;
+            const chitLoss = bidAmount - commission;
+            const lossPerPerson = chitLoss / totalParticipants;
+            const baseInstallment = totalChitValue / totalParticipants;
+            const nextInstallment = baseInstallment - lossPerPerson;
+            
+            // Calculate remaining months
+            const remainingMonths = totalParticipants - currentMonth;
+            
+            // Format the auction date
+            const auctionDateObj = new Date(auctionDate);
+            const formattedAuctionDate = auctionDateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('result').innerHTML = `
+                <p>Commission: ₹${commission.toFixed(2)}</p>
+                <p>Chit Loss: ₹${chitLoss.toFixed(2)}</p>
+                <p>Chit: ₹${lossPerPerson.toFixed(2)}</p>
+                <p>Base Installment: ₹${baseInstallment.toFixed(2)}</p>
+                <p>Next Installment: ₹${nextInstallment.toFixed(2)}</p>
+                
+                <div class="info-section">
+                    <div class="info-title">Chit Status:</div>
+                    <p>Current Month: ${currentMonth} of ${totalParticipants}</p>
+                    <p>Remaining Months: ${remainingMonths}</p>
+                    <p>Next Auction Date: ${formattedAuctionDate}</p>
+                </div>
+            `;
+            
+            // Show copy button
+            document.getElementById('copySection').style.display = 'block';
+        }
+        
+        function copyDetails() {
+            const totalParticipants = document.getElementById('totalParticipants').value;
+            const currentMonth = document.getElementById('currentMonth').value;
+            const chitLoss = parseFloat(document.getElementById('bidAmount').value) - 
+                            (parseFloat(document.getElementById('totalChitValue').value) * 0.04);
+            const baseInstallment = parseFloat(document.getElementById('totalChitValue').value) / 
+                                    parseFloat(document.getElementById('totalParticipants').value);
+            const nextInstallment = baseInstallment - (chitLoss / parseFloat(document.getElementById('totalParticipants').value));
+            const auctionDate = new Date(document.getElementById('auctionDate').value);
+            
+            const textToCopy = 
+                `Chit Fund Summary\n` +
+                `----------------\n` +
+                `Month: ${currentMonth} of ${totalParticipants}\n` +
+                `Remaining Months: ${totalParticipants - currentMonth}\n` +
+                `Chit Loss: ₹${chitLoss.toFixed(2)}\n` +
+                `Next Installment: ₹${nextInstallment.toFixed(2)}\n` +
+                `Next Auction Date: ${auctionDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })}\n`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                const copySuccess = document.getElementById('copySuccess');
+                copySuccess.style.display = 'block';
+                setTimeout(function() {
+                    copySuccess.style.display = 'none';
+                }, 2000);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy. Please try again.');
+            });
+        }
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("service-worker.js")
+                    .then(reg => console.log("Service Worker Registered", reg))
+                    .catch(err => console.log("Service Worker Registration Failed", err));
+            });
+        }
+    </script>        
+ 
+    
+</body>
+</html>
