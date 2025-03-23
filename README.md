@@ -1,8 +1,11 @@
 # chit-calculator
+
 📊 Chit Fund Calculator
+
 A simple web-based application to calculate and display various aspects of a chit fund. The calculator helps users understand the payable amount, commission, profit per person, next installment, and more.
 
 🌟 Features:
+
 User-Friendly Interface:
 
 Neat and responsive design using HTML and CSS.
@@ -12,6 +15,7 @@ Clean input fields for user data entry.
 Styled result display for better visibility.
 
 Core Functionalities:
+
 
 Amount to be Paid: The remaining amount after deducting the bid amount from the total chit value.
 
@@ -26,6 +30,7 @@ Next Installment: The amount to be paid in the next month, considering the profi
 Remaining Months: Counts the months left in the chit duration.
 
 Copy Functionality:
+
 
 Users can copy specific chit details to the clipboard for easy reference.
 
@@ -58,29 +63,14 @@ Input validation ensures valid and sensible values before processing.
 Uses navigator.clipboard.writeText() for clipboard access.
 
 💻 Example:
-If the user enters:
+The Webpage
+![image](https://github.com/user-attachments/assets/a6c92447-3011-48a3-abf8-3d96e12754c3)
 
-Total Chit Value: ₹1,00,000
+The Working
+![image](https://github.com/user-attachments/assets/62631230-e55f-4bd3-9aa9-40698acd45dd)
 
-Bid Amount: ₹80,000
-
-Total Participants: 20
-
-Current Month: 5
-
-The calculator displays:
-
-Amount to be Paid: ₹20,000
-
-Commission: ₹4,000
-
-Base Installment: ₹5,000
-
-Profit Per Person: ₹3,800
-
-Next Installment: ₹1,200
-
-Remaining Months: 15
+Details Copying Funtionality
+![image](https://github.com/user-attachments/assets/5830afc7-f094-42b5-b379-0bdbc44ddf54)
 
 🔗 Conclusion:
 This Chit Fund Calculator is a handy tool for quick calculations and financial planning in chit funds. It is a great example of blending web development skills with real-world finance concepts.
